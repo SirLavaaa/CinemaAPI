@@ -16,6 +16,12 @@ namespace CinemaAPI.Controller
             _db = db;
         }
 
+        [HttpGet]
+        public IActionResult GetTicket()
+        {
+            return Ok(_db.Tickets.ToList());
+        }
+
         [HttpPost]
         public IActionResult BuyTicket(CreateTicketDto dto)
         {
@@ -44,6 +50,18 @@ namespace CinemaAPI.Controller
             _db.SaveChanges();
 
             return Created("", ticket);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteTicket(int id)
+        {
+            if (_db.Tickets.Find(id) is Ticket ticket)
+            {
+                _db.Tickets.Remove(ticket);
+                _db.SaveChanges();
+                return NoContent();
+            }
+            return NotFound("Ticket not found");
         }
     }
 }
